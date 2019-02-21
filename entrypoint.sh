@@ -15,7 +15,22 @@ if [ !${PROXY_PASS} ]; then
     PROXY_PASS="http://walt.mydns.bz:10022/"
 fi
 
-sed -i 's|\treturn 404|\tproxy_pass '${PROXY_PASS}'|g' /etc/nginx/conf.d/default.conf
+#-------------------------------------------
+cat << EOF > /etc/nginx/conf.d/default.conf
+	server {
+		listen 80 default_server;
+		location / {
+			proxy_pass ${PROXY_PASS};
+		}
+	}
+	proxy_set_header Host $http_host;
+	proxy_set_header X-Real-IP $remote_addr;
+	proxy_set_header X-Forwarded-Proto $scheme;
+	proxy_set_header X-Forwarded-Host $http_host;
+	proxy_set_header X-Forwarded-Server $host;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+EOF
+#-------------------------------------------
 
 /usr/sbin/nginx
 /usr/sbin/sshd -D
