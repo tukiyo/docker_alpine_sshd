@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 if [ !${GITHUB_USER} ]; then
-    GITHUB_USER=u-ryo
+    GITHUB_USER=tukiyo
 fi
 
 adduser -D -s /bin/ash ${GITHUB_USER}
@@ -12,11 +12,10 @@ wget -q -O /home/${GITHUB_USER}/.ssh/authorized_keys https://github.com/${GITHUB
 chown -R ${GITHUB_USER}:${GITHUB_USER} /home/${GITHUB_USER}
 
 if [ !${PROXY_PASS} ]; then
-    PROXY_PASS=http://google.com
+    PROXY_PASS="http://walt.mydns.bz:10022/"
 fi
 
 sed -i 's|\treturn 404|\tproxy_pass '${PROXY_PASS}'|g' /etc/nginx/conf.d/default.conf
 
 /usr/sbin/nginx
-/usr/sbin/sshd
-tail -f /var/log/nginx/access.log
+/usr/sbin/sshd -D
