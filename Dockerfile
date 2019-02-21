@@ -18,5 +18,5 @@ RUN set -x \
     && sed -i 's|\treturn 404|\tproxy_pass '${PROXY_PASS}'|g' /etc/nginx/conf.d/default.conf \
     && update-ca-certificates
 # COPY entrypoint.sh /
-CMD /usr/sbin/nginx && /usr/sbin/sshd && tail -f /var/log/nginx/access.log
+CMD /usr/sbin/nginx && /usr/sbin/sshd -D
 # ENTRYPOINT /entrypoint.sh
